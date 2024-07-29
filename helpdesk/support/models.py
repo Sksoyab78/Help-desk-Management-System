@@ -90,9 +90,12 @@ class Ticket(models.Model):
 
     @property
     def color_class(self):
+        now = timezone.now()
+        time_diff = now - self.created_at
+        print(f"Time difference for ticket {self.id}: {time_diff}")
         if self.status == 'Resolved':
             return 'table-success'
-        elif self.status == 'Open' and (timezone.now() - self.created_at) > timedelta(days=2):
+        elif self.status == 'Open' and time_diff > timedelta(days=2):
             return 'table-danger'
         else:
             return ''

@@ -31,13 +31,7 @@
                             </thead>
                             <tbody>
                                 {% for ticket in tickets %}
-                                {% if ticket.status == 'Resolved' %}
-                                <tr style="background-color: lightgreen;">
-                                {% elif ticket.updated_at|timesince:now > '2 days' %}
-                                <tr style="background-color: lightcoral;">
-                                {% else %}
-                                <tr>
-                                {% endif %}
+                                <tr class="{{ ticket.color_class }}">
                                     <td>{{ ticket.id }}</td>
                                     <td>{{ ticket.title }}</td>
                                     <td>{{ ticket.description|slice:":50" }}{% if ticket.description|length > 50 %}...{% endif %}</td>

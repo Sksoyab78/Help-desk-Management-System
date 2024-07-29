@@ -51,9 +51,24 @@
                                 <p>No notes available.</p>
                             {% endif %}
                         </div>
+                        
                         <div class="form-group">
                             <label for="note">Add Note:</label>
                             <textarea id="note" name="note" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Attachments:</label>
+                            {% if attachments %}
+                                <ul class="list-group">
+                                    {% for attachment in attachments %}
+                                        <li class="list-group-item">
+                                            <img src="{{ attachment.file.url }}" alt="Attachment" style="max-width: 10%; height: auto;">
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No attachments available.</p>
+                            {% endif %}
                         </div>
                         <button type="submit" class="mt-1 btn btn-primary">Update Ticket</button>
                         <a href="{% url 'manage_tickets' %}" class="mt-1 btn btn-secondary">Back</a>

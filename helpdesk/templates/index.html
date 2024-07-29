@@ -103,9 +103,9 @@
         <input type="password" name="password" placeholder="Password" required />
         <select name="role" required>
           <option value="" disabled selected>Select Role</option>
-          <option value="1">Staff</option>
-          <option value="2">Customer</option>
-          <option value="3">Admin</option>
+          <option value="1">User</option>
+          {% comment %} <option value="2">Customer Supportive</option> {% endcomment %}
+          <option value="3">Customer Supportive</option>
         </select>
         <button type="submit">Create</button>
         <p class="message">Already registered? <a href="#">Sign In</a></p>

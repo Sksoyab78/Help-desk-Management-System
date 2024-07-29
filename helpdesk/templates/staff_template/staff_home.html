@@ -349,7 +349,7 @@
                                 <li class="app-sidebar__heading">
                                     {{ user.first_name }} - 
                                    
-                                        Staff
+                                        User 
                                 </li>
                                 <li>
                                     <a href="{% url 'staff_home' %}" class="mm-active">
@@ -402,49 +402,43 @@
                                 
                             </div>            <div class="row">
                                 <div class="col-md-6 col-xl-4">
-                                    {% comment %} <a href="{% url 'student_list' %}"> {% endcomment %}
-                                        <div class="card mb-3 widget-content bg-midnight-bloom">
-                                            <div class="widget-content-wrapper text-white">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-heading">Total Students</div>
-                                                    <div class="widget-subheading">Number of enrolled students</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="widget-numbers text-white"><span>{{ total_students }}</span></div>
-                                                </div>
+                                    <div class="card mb-3 widget-content bg-arielle-smile">
+                                        <div class="widget-content-wrapper text-white">
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">Open Tickets</div>
+                                                <div class="widget-subheading">Number of open tickets</div>
+                                            </div>
+                                            <div class="widget-content-right">
+                                                <div class="widget-numbers text-white"><span>{{ open_tickets_count }}</span></div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 col-xl-4">
-                                    {% comment %} <a href="{% url 'payment_report' %}"> {% endcomment %}
-                                        <div class="card mb-3 widget-content bg-arielle-smile">
-                                            <div class="widget-content-wrapper text-white">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-heading">Payment Report</div>
-                                                    <div class="widget-subheading">Total amount collected this month</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="widget-numbers text-white"><span>{{ monthly_collection }}</span></div>
-                                                </div>
+                                    <div class="card mb-3 widget-content bg-grow-early">
+                                        <div class="widget-content-wrapper text-white">
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">In-Progress Tickets</div>
+                                                <div class="widget-subheading">Tickets currently being worked on</div>
+                                            </div>
+                                            <div class="widget-content-right">
+                                                <div class="widget-numbers text-white"><span>{{ in_progress_tickets_count }}</span></div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 col-xl-4">
-                                    {% comment %} <a href="{% url 'fee_payment' %}"> {% endcomment %}
-                                        <div class="card mb-3 widget-content bg-grow-early">
-                                            <div class="widget-content-wrapper text-white">
-                                                <div class="widget-content-left">
-                                                    <div class="widget-heading">Student Fees Payment</div>
-                                                    <div class="widget-subheading">Amount to be paid</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="widget-numbers text-white"><span>{{ total_pending_amount }}</span></div>
-                                                </div>
+                                    <div class="card mb-3 widget-content bg-premium-dark">
+                                        <div class="widget-content-wrapper text-white">
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">Resolved Tickets</div>
+                                                <div class="widget-subheading">Tickets that have been resolved</div>
+                                            </div>
+                                            <div class="widget-content-right">
+                                                <div class="widget-numbers text-white"><span>{{ resolved_tickets_count }}</span></div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

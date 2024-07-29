@@ -1,7 +1,6 @@
 from django.core.mail import EmailMessage
-from django.conf import settings
 
-def send_ticket_notification(ticket, sender_email, recipient_email, note):
+def send_ticket_notification(ticket, note, admin_email):
     subject = f"Ticket Update: {ticket.title}"
     message = (f"Dear User,\n\n"
                f"Your ticket with the following details has been updated:\n\n"
@@ -10,12 +9,19 @@ def send_ticket_notification(ticket, sender_email, recipient_email, note):
                f"Note: {note}\n\n"
                f"Regards,\n"
                f"Support Team")
-    
+
+    recipient_email = ticket.user.email  # Email of the user who created the ticket
+
     email = EmailMessage(
         subject,
         message,
-        sender_email,  # Sender email
-        [recipient_email],  # Recipient email
-        headers={'Reply-To': sender_email}  # This ensures replies go to the sender email
+        'support@example.com',  # Fixed support email address for the sender
+        [recipient_email],
+        headers={'Reply-To': admin_email}  # Reply-To header set to the admin's email
     )
-    email.send(fail_silently=False)
+
+    try:
+        email.send(fail_silently=False)
+        print(f"Email sent to {recipient_email}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")

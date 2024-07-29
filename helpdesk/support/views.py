@@ -69,7 +69,7 @@ def admin_home(request):
         'open_tickets_count': open_tickets_count,
         'in_progress_tickets_count': in_progress_tickets_count,
         'resolved_tickets_count': resolved_tickets_count,
-        'page_title': 'Admin Dashboard',
+        'page_title': 'Customer Supportive Dashboard',
     }
     return render(request, 'admin_template/admin_home.html', context)
 
@@ -121,7 +121,9 @@ def manage_tickets_ad(request):
 
 
 
+import logging
 
+logger = logging.getLogger(__name__)
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -151,22 +153,36 @@ def update_ticket_admin(request, ticket_id):
         TicketNote.objects.create(ticket=ticket, user=request.user, note=note)
 
         # Send email notification
-        sender_email = request.user.email  # Admin's email
-        recipient_email = ticket.user.email  # Staff's email
-        send_ticket_notification(ticket, sender_email, recipient_email, note)
+        sender_email = request.user.email
+        recipient_email = ticket.user.email
+        admin_email = request.user.email  # Assuming logged-in user is admin
+        send_ticket_notification(ticket, note, admin_email)
 
         messages.success(request, 'Ticket updated successfully.')
         return redirect('manage_tickets_ad')
 
     notes = TicketNote.objects.filter(ticket=ticket).order_by('created_at')
+    attachments = ticket.attachments.all()  # Get attachments
 
     context = {
         'ticket': ticket,
         'notes': notes,
+        'attachments': attachments,
         'page_title': 'Update Ticket'
     }
 
     return render(request, 'admin_template/update_ticket_admin.html', context)
+
+
+
+@login_required
+def delete_note(request, note_id):
+    note = get_object_or_404(TicketNote, id=note_id)
+    ticket_id = note.ticket.id
+    note.delete()
+
+    return redirect('update_ticket_admin', ticket_id=ticket_id)
+
 
 
 @login_required
@@ -174,7 +190,9 @@ def view_ticket_admin(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     attachments = ticket.attachments.all()
     ticket_status = TicketStatus.objects.filter(ticket=ticket).first()
+    # Fetch all notes for the ticket
     notes = TicketNote.objects.filter(ticket=ticket).order_by('created_at')
+    
     context = {
         'ticket': ticket,
         'attachments': attachments,
@@ -189,7 +207,6 @@ def view_ticket_admin(request, ticket_id):
 
 
 
-
 #Staff_panel 
 #-----------------------------------------------------------------------------------------------------------------------------
 
@@ -198,11 +215,20 @@ def staff_home(request):
     user = request.user
     profile = Profile.objects.get(user=user)  # Fetch the user's profile
     
+   
+    open_tickets_count = Ticket.objects.filter(user=user, status='Open').count()
+    in_progress_tickets_count = Ticket.objects.filter(user=user, status='In-Progress').count()
+    resolved_tickets_count = Ticket.objects.filter(user=user, status='Resolved').count()
+
     context = {
         'user': user,
         'role': profile.role,
-        'page_title': 'Staff Dashboard'
+        'page_title': 'User Dashboard',
+        'open_tickets_count': open_tickets_count,
+        'in_progress_tickets_count': in_progress_tickets_count,
+        'resolved_tickets_count': resolved_tickets_count,
     }
+
     return render(request, 'staff_template/staff_home.html', context)
 
 
@@ -290,8 +316,9 @@ from .utils import send_ticket_notification  # Import the function
 @login_required
 def update_ticket(request, ticket_id):
     user = request.user
-    ticket = get_object_or_404(Ticket, id=ticket_id, user=user)  # Ensure ticket belongs to the logged-in user
+    ticket = get_object_or_404(Ticket, id=ticket_id, user=user)
     notes = TicketNote.objects.filter(ticket=ticket).order_by('created_at')
+    attachments = ticket.attachments.all()  # Get attachments
 
     if request.method == 'POST':
         status = request.POST.get('status')
@@ -309,16 +336,19 @@ def update_ticket(request, ticket_id):
             TicketNote.objects.create(ticket=ticket, user=request.user, note=note)
 
         # Send email notification
-        sender_email = request.user.email  # Staff's email
-        recipient_email = ticket.admin.email  # Admin's email
-        send_ticket_notification(ticket, sender_email, recipient_email, note)
-
+        # sender_email = request.user.email
+        # recipient_email = ticket.user.email
+        # admin_email = request.user.email 
+        # send_ticket_notification(ticket, note, admin_email)
+        
+        
         messages.success(request, 'Ticket updated successfully.')
         return redirect('manage_tickets')
 
     return render(request, 'staff_template/update_ticket.html', {
         'ticket': ticket,
         'notes': notes,
+        'attachments': attachments,
         'page_title': 'Update Ticket'
     })
 
@@ -336,7 +366,6 @@ def view_ticket(request, ticket_id):
         'notes': notes,
         'page_title': 'View Ticket'
     })
-
 
 
 

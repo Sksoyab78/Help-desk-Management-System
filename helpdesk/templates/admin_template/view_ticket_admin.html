@@ -50,7 +50,7 @@
                             <ul class="list-group">
                                 {% for attachment in attachments %}
                                     <li class="list-group-item">
-                                        <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
+                                        <img src="{{ attachment.file.url }}" alt="Attachment" style="max-width: 10%; height: auto;">
                                     </li>
                                 {% endfor %}
                             </ul>
